@@ -1,0 +1,13 @@
+DB: 
+  HOST: cluster0.4hs3c.mongodb.net
+  NAME: prod
+  PASSWORD: root
+  USERNAME: root
+SERVER: 
+  IdleTimeout: 20
+  ReadTimeout: 10
+  ShutdownWait: 30
+  WriteTimeout: 10
+  Address: 8081
+APIKEY:
+  GeoCoding: 9a703373dbd12339d6affa9d4a0ebffe
