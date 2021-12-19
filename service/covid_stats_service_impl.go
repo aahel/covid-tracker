@@ -53,7 +53,7 @@ func FetchCovidData() (map[string]types.CovidStat, *errors.AppError) {
 	if err != nil {
 		return nil, errors.InternalServerStd().AddDebug(err)
 	}
-	if resp.StatusCode() == 200 {
+	if resp.StatusCode() <= 299 {
 		return cvoidDataResp, nil
 	}
 	return nil, errors.InternalServerStd()
@@ -87,11 +87,13 @@ func FetchStateCode(lat, long string) (string, *errors.AppError) {
 		SetResult(geoCodingData).
 		Get(config.ReverseGeoCodingAPiUrl)
 	if err != nil {
-		fmt.Println(err.Error())
 		return "", errors.InternalServerStd().AddDebug(err)
 	}
 	if resp.StatusCode() == 200 {
 		return geoCodingData.Data[0].RegionCode, nil
+	}
+	if resp.StatusCode() <= 499 {
+		return "", errors.NotFound("location not found")
 	}
 	return "", errors.InternalServerStd()
 }
