@@ -18,3 +18,7 @@ ex :-
 
 `GET` http://localhost:8081/v1/covidstats?latitude=22.562300&longitude=88.3570
 
+### APi Docs
+
+`GET` http://localhost:8081/docs
+
