@@ -7,6 +7,7 @@ import (
 	"github.com/aahel/covid-tracker/server"
 	"github.com/aahel/covid-tracker/service"
 	"github.com/aahel/covid-tracker/store"
+	"github.com/go-openapi/runtime/middleware"
 )
 
 func main() {
@@ -19,6 +20,11 @@ func main() {
 	covidStatsService := service.NewCovidStatsService(lgr, covidStatsStore)
 	covidStatsHandler := handler.NewCovidStatHandler(lgr, covidStatsService)
 	api.InitCovidStatRoutes(router, covidStatsHandler)
+
+	// handler for documentation
+	opts := middleware.RedocOpts{SpecURL: "/swagger.yaml"}
+	dh := middleware.Redoc(opts, nil)
+	api.InitDocRoutes(router, dh)
 
 	server.StartAndGracefullShutdown(lgr, router, appConfig.SERVER)
 }

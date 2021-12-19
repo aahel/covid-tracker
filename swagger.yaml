@@ -1,0 +1,181 @@
+definitions:
+  CovidStat:
+    properties:
+      id:
+        $ref: '#/definitions/ObjectID'
+      last_updated_at:
+        format: date-time
+        type: string
+        x-go-name: LastUpdatedAt
+      state_code:
+        type: string
+        x-go-name: StateCode
+      state_count:
+        format: int64
+        type: integer
+        x-go-name: StateCount
+    type: object
+    x-go-package: github.com/aahel/covid-tracker/entity
+  CovidStatNotFoundErr:
+    properties:
+      error_message:
+        description: Error message
+        example: covid data not found
+        type: string
+        x-go-name: Message
+      status:
+        example: 404
+        format: int64
+        type: integer
+        x-go-name: Status
+    type: object
+    x-go-package: github.com/aahel/covid-tracker/api/v1
+  CovidStatResp:
+    properties:
+      india_count:
+        example: 3456789
+        format: int64
+        type: integer
+        x-go-name: IndiaCount
+      last_updated_at:
+        example: "2021-11-01T04:24:14Z"
+        format: date-time
+        type: string
+        x-go-name: LastUpdatedAt
+      state_code:
+        example: WB
+        type: string
+        x-go-name: StateCode
+      state_count:
+        example: 23456
+        format: int64
+        type: integer
+        x-go-name: StateCount
+    type: object
+    x-go-package: github.com/aahel/covid-tracker/types
+  ErrCovidStatNotFoundWrapper:
+    properties:
+      error:
+        $ref: '#/definitions/CovidStatNotFoundErr'
+    type: object
+    x-go-package: github.com/aahel/covid-tracker/api/v1
+  ErrIntServerWrapper:
+    properties:
+      error:
+        $ref: '#/definitions/InterServerErr'
+    type: object
+    x-go-package: github.com/aahel/covid-tracker/api/v1
+  InterServerErr:
+    properties:
+      error:
+        description: For future use ,not implemented ye
+        type: object
+        x-go-name: Error
+      error_message:
+        description: Error message
+        example: Something went wrong
+        type: string
+        x-go-name: Message
+      status:
+        example: 500
+        format: int64
+        type: integer
+        x-go-name: Status
+    type: object
+    x-go-package: github.com/aahel/covid-tracker/api/v1
+  Meta:
+    description: will only be there in case of error
+    properties:
+      error:
+        description: For future use ,not implemented ye
+        type: object
+        x-go-name: Error
+      error_message:
+        description: Error message
+        example: No mapping exists
+        type: string
+        x-go-name: Message
+      status_code:
+        description: Error status code
+        example: 901
+        format: int64
+        type: integer
+        x-go-name: Status
+    title: Holds the error status of the request informations ,
+    type: object
+    x-go-package: github.com/aahel/covid-tracker/respond
+  ObjectID:
+    items:
+      format: uint8
+      type: integer
+    title: ObjectID is the BSON ObjectID type.
+    type: array
+    x-go-package: go.mongodb.org/mongo-driver/bson/primitive
+  createSuceessPayload:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/CovidStat'
+        type: array
+        x-go-name: Data
+    type: object
+    x-go-package: github.com/aahel/covid-tracker/api/v1
+  getpayload:
+    properties:
+      data:
+        $ref: '#/definitions/CovidStatResp'
+    type: object
+    x-go-package: github.com/aahel/covid-tracker/api/v1
+paths:
+  /v1/covidstats:
+    get:
+      description: Return a covidStat from the database
+      operationId: getCovidStat
+      parameters:
+      - in: query
+        name: latitude
+        required: true
+        type: string
+        x-go-name: Latitude
+      - in: query
+        name: longitude
+        required: true
+        type: string
+        x-go-name: Longitude
+      responses:
+        "200":
+          $ref: '#/responses/CovidStatSuccessResponse'
+        "404":
+          $ref: '#/responses/CovidStatNotFoundResponse'
+        "500":
+          $ref: '#/responses/CovidStatIntserverResponse'
+      tags:
+      - covidStat
+    post:
+      description: Create new covidStats
+      operationId: createCovidStats
+      responses:
+        "201":
+          $ref: '#/responses/CovidStatCreateSuccessResp'
+        "500":
+          $ref: '#/responses/CovidStatIntserverResponse'
+      tags:
+      - covidStat
+responses:
+  CovidStatCreateSuccessResp:
+    description: ""
+    schema:
+      $ref: '#/definitions/createSuceessPayload'
+  CovidStatIntserverResponse:
+    description: ""
+    schema:
+      $ref: '#/definitions/ErrIntServerWrapper'
+  CovidStatNotFoundResponse:
+    description: ""
+    schema:
+      $ref: '#/definitions/ErrCovidStatNotFoundWrapper'
+  CovidStatSuccessResponse:
+    description: A list of covid stats
+    schema:
+      $ref: '#/definitions/getpayload'
+swagger: "2.0"

@@ -20,6 +20,11 @@ func NewCovidStatHandler(lgr *zap.SugaredLogger, svc service.CovidStatsService) 
 	return &CovidStatHandler{lgr, svc}
 }
 
+// swagger:route POST /v1/covidstats covidStat createCovidStats
+// Create new covidStats
+// responses:
+//	201: CovidStatCreateSuccessResp
+//	500: CovidStatIntserverResponse
 func (cov *CovidStatHandler) SaveCovidStats(rw http.ResponseWriter, r *http.Request) *errors.AppError {
 	covidStats, err := cov.svc.SaveCovidStats()
 	if err != nil {
@@ -28,6 +33,12 @@ func (cov *CovidStatHandler) SaveCovidStats(rw http.ResponseWriter, r *http.Requ
 	return respond.Created(rw, covidStats, nil)
 }
 
+// swagger:route GET /v1/covidstats covidStat getCovidStat
+// Return a covidStat from the database
+// responses:
+//	200: CovidStatSuccessResponse
+//	500: CovidStatIntserverResponse
+//  404: CovidStatNotFoundResponse
 func (cov *CovidStatHandler) GetCovidStats(rw http.ResponseWriter, r *http.Request) *errors.AppError {
 	lat := r.URL.Query().Get(types.Latitude)
 	long := r.URL.Query().Get(types.Longitude)

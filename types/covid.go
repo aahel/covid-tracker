@@ -17,10 +17,14 @@ const (
 )
 
 type CovidStatResp struct {
-	StateCode     string    `json:"state_code,omitempty"`
-	StateCount    int       `json:"state_count,omitempty"`
+	// example: WB
+	StateCode string `json:"state_code,omitempty"`
+	// example: 23456
+	StateCount int `json:"state_count,omitempty"`
+	// example: 2021-11-01T04:24:14Z
 	LastUpdatedAt time.Time `json:"last_updated_at,omitempty"`
-	IndiaCount    int64     `json:"india_count,omitempty"`
+	// example: 3456789
+	IndiaCount int64 `json:"india_count,omitempty"`
 }
 
 type ReverseGeoCodingResp struct {

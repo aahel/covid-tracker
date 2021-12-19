@@ -13,3 +13,8 @@ func InitCovidStatRoutes(r chi.Router, cov *v1.CovidStatHandler) {
 		r.Method(http.MethodGet, "/", Handler(cov.GetCovidStats))
 	})
 }
+
+func InitDocRoutes(r chi.Router, dh http.Handler) {
+	r.Method(http.MethodGet, "/docs", dh)
+	r.Method(http.MethodGet, "/swagger.yaml", http.FileServer(http.Dir("./")))
+}
